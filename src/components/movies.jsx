@@ -4,7 +4,8 @@ import Like from "./like.jsx";
 import Pagination from "./common/pagination.jsx";
 class Movies extends Component {
   state = {
-    movies: getMovies()
+    movies: getMovies(),
+    pageSize: 4
   };
   numberMovies() {
     return this.state.movies.length ? this.state.movies.length : "no";
@@ -24,6 +25,8 @@ class Movies extends Component {
   };
 
   render() {
+    const { length: count } = this.state.movies;
+    const pageSize = this.state.pageSize;
     return (
       <main className="container">
         <h1>There are {this.numberMovies()} movies in Database </h1>
