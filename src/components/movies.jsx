@@ -19,6 +19,9 @@ class Movies extends Component {
     movies[index].liked = !movies[index].liked;
     this.setState({ movies });
   };
+  handlePageChange = movie => {
+    console.log("hey");
+  };
 
   render() {
     return (
@@ -37,7 +40,11 @@ class Movies extends Component {
           </thead>
           <tbody>{this.getcontent()}</tbody>
         </table>
-        <Pagination />
+        <Pagination
+          itemsCount={count}
+          pageSize={pageSize}
+          onPageChange={this.handlePageChange}
+        />
       </main>
     );
   }
