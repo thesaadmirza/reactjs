@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { getMovies, deleteMovie } from "../services/fakeMovieService.js";
 import Like from "./like.jsx";
 import Pagination from "./common/pagination.jsx";
+import { paginate, pageinate } from "../utils/paginate.js";
 class Movies extends Component {
   state = {
     movies: getMovies(),
-    pageSize: 4
+    pageSize: 4,
+    currentPage: 1
   };
   numberMovies() {
     return this.state.movies.length ? this.state.movies.length : "no";
@@ -20,13 +22,14 @@ class Movies extends Component {
     movies[index].liked = !movies[index].liked;
     this.setState({ movies });
   };
-  handlePageChange = movie => {
-    console.log("hey");
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
   };
 
   render() {
     const { length: count } = this.state.movies;
-    const pageSize = this.state.pageSize;
+    const { pageSize, currentPage, movies: allMovies } = this.state;
+    const movies = pageinate(allMovies, currentPage, pageSize);
     return (
       <main className="container">
         <h1>There are {this.numberMovies()} movies in Database </h1>
@@ -41,18 +44,19 @@ class Movies extends Component {
               <th>Action</th>
             </tr>
           </thead>
-          <tbody>{this.getcontent()}</tbody>
+          <tbody>{this.getcontent(movies)}</tbody>
         </table>
         <Pagination
           itemsCount={count}
           pageSize={pageSize}
+          currentPage={currentPage}
           onPageChange={this.handlePageChange}
         />
       </main>
     );
   }
-  getcontent() {
-    const bodyarea = this.state.movies.map(movies => (
+  getcontent(movies) {
+    const bodyarea = movies.map(movies => (
       <tr key={movies._id}>
         <td>{movies.title}</td>
         <td>{movies.genre.name}</td>
