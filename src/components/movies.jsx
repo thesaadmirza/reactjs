@@ -2,12 +2,15 @@ import React, { Component } from "react";
 import { getMovies, deleteMovie } from "../services/fakeMovieService.js";
 import Like from "./like.jsx";
 import Pagination from "./common/pagination.jsx";
+import Sidebar from "./common/sidebar.jsx";
 import { paginate, pageinate } from "../utils/paginate.js";
+import { genres, getGenres } from "../services/fakeGenreService.js";
 class Movies extends Component {
   state = {
     movies: getMovies(),
     pageSize: 4,
-    currentPage: 1
+    currentPage: 1,
+    currentGenre: 1
   };
   numberMovies() {
     return this.state.movies.length ? this.state.movies.length : "no";
@@ -25,33 +28,56 @@ class Movies extends Component {
   handlePageChange = page => {
     this.setState({ currentPage: page });
   };
+  handleGenreChange = genre => {
+    this.setState({ currentGenre: genre._id });
+  };
 
   render() {
     const { length: count } = this.state.movies;
-    const { pageSize, currentPage, movies: allMovies } = this.state;
-    const movies = pageinate(allMovies, currentPage, pageSize);
+    const {
+      pageSize,
+      currentPage,
+      movies: allMovies,
+      currentGenre
+    } = this.state;
+    const filtered =
+      currentGenre != 1
+        ? allMovies.filter(m => m.genre._id === currentGenre)
+        : allMovies;
+    const movies = pageinate(filtered, currentPage, pageSize);
     return (
       <main className="container">
-        <h1>There are {this.numberMovies()} movies in Database </h1>
-        <table className="table table-hover table-bordered">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Genres</th>
-              <th>Rank</th>
-              <th>Date</th>
-              <th>Like</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>{this.getcontent(movies)}</tbody>
-        </table>
-        <Pagination
-          itemsCount={count}
-          pageSize={pageSize}
-          currentPage={currentPage}
-          onPageChange={this.handlePageChange}
-        />
+        <br /> <br />
+        <div className="row">
+          <div className="col-3">
+            <Sidebar
+              currentGenre={currentGenre}
+              handleGenreChange={this.handleGenreChange}
+            />
+          </div>
+          <div className="col-9">
+            <h1>There are {this.numberMovies()} movies in Database </h1>
+            <table className="table table-hover table-bordered">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Genres</th>
+                  <th>Rank</th>
+                  <th>Date</th>
+                  <th>Like</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>{this.getcontent(movies)}</tbody>
+            </table>
+            <Pagination
+              itemsCount={filtered.length}
+              pageSize={pageSize}
+              currentPage={currentPage}
+              onPageChange={this.handlePageChange}
+            />
+          </div>
+        </div>
       </main>
     );
   }
