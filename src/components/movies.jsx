@@ -1,8 +1,13 @@
 import React, { Component } from "react";
-import { getMovies, deleteMovie } from "../services/fakeMovieService.js";
-import Like from "./like.jsx";
+import {
+  getMovies,
+  deleteMovie,
+  getMovie
+} from "../services/fakeMovieService.js";
+import _ from "lodash";
 import Pagination from "./common/pagination.jsx";
 import Sidebar from "./common/sidebar.jsx";
+import MoviesTable from "./MoviesTable.jsx";
 import { paginate, pageinate } from "../utils/paginate.js";
 import { genres, getGenres } from "../services/fakeGenreService.js";
 class Movies extends Component {
@@ -10,13 +15,14 @@ class Movies extends Component {
     movies: getMovies(),
     pageSize: 4,
     currentPage: 1,
-    currentGenre: 1
+    currentGenre: 1,
+    sortColumn: { path: "title", order: "asc" }
   };
   numberMovies() {
     return this.state.movies.length ? this.state.movies.length : "no";
   }
   deletMovie = id => {
-    return deleteMovie(id) ? this.setState(getMovies()) : "Sorry";
+    return deleteMovie(id) ? this.setState({ movies: getMovies() }) : "Sorry";
   };
   handleLike = movie => {
     const movies = [...this.state.movies];
@@ -31,20 +37,27 @@ class Movies extends Component {
   handleGenreChange = genre => {
     this.setState({ currentGenre: genre._id });
   };
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
+  };
 
   render() {
     const { length: count } = this.state.movies;
+    const onLike = this.handleLike;
+    const onDelete = this.deletMovie;
     const {
       pageSize,
       currentPage,
       movies: allMovies,
+      sortColumn,
       currentGenre
     } = this.state;
     const filtered =
       currentGenre != 1
         ? allMovies.filter(m => m.genre._id === currentGenre)
         : allMovies;
-    const movies = pageinate(filtered, currentPage, pageSize);
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+    const movies = pageinate(sorted, currentPage, pageSize);
     return (
       <main className="container">
         <br /> <br />
@@ -57,19 +70,17 @@ class Movies extends Component {
           </div>
           <div className="col-9">
             <h1>There are {this.numberMovies()} movies in Database </h1>
-            <table className="table table-hover table-bordered">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Genres</th>
-                  <th>Rank</th>
-                  <th>Date</th>
-                  <th>Like</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>{this.getcontent(movies)}</tbody>
-            </table>
+            <MoviesTable
+              movies={movies}
+              sortColumn={sortColumn}
+              onSort={this.handleSort}
+              onDelete={function(movies) {
+                onDelete(movies);
+              }}
+              onLike={function(movies) {
+                onLike(movies);
+              }}
+            />
             <Pagination
               itemsCount={filtered.length}
               pageSize={pageSize}
@@ -80,28 +91,6 @@ class Movies extends Component {
         </div>
       </main>
     );
-  }
-  getcontent(movies) {
-    const bodyarea = movies.map(movies => (
-      <tr key={movies._id}>
-        <td>{movies.title}</td>
-        <td>{movies.genre.name}</td>
-        <td>{movies.numberInStock}</td>
-        <td>{movies.publishDate}</td>
-        <td>
-          <Like liked={movies.liked} onfit={() => this.handleLike(movies)} />
-        </td>
-        <td>
-          <button
-            onClick={() => this.deletMovie(movies._id)}
-            className="btn btn-danger"
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    ));
-    return bodyarea;
   }
 }
 
