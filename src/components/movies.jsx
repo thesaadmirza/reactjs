@@ -18,6 +18,7 @@ class Movies extends Component {
     currentGenre: 1,
     sortColumn: { path: "title", order: "asc" }
   };
+
   numberMovies() {
     return this.state.movies.length ? this.state.movies.length : "no";
   }
