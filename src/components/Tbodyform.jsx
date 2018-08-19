@@ -1,11 +1,14 @@
 import React from "react";
 import Like from "./like.jsx";
+import { Link } from "react-router-dom";
 const Tbodyform = props => {
   const { movies, mLike, mDelete } = props;
 
   return movies.map(movies => (
     <tr key={movies._id}>
-      <td>{movies.title}</td>
+      <td>
+        <Link to={"./moviedetail/" + movies._id}>{movies.title}</Link>
+      </td>
       <td>{movies.genre.name}</td>
       <td>{movies.numberInStock}</td>
       <td>{movies.publishDate}</td>
