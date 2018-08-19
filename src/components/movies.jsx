@@ -60,37 +60,34 @@ class Movies extends Component {
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
     const movies = pageinate(sorted, currentPage, pageSize);
     return (
-      <main className="container">
-        <br /> <br />
-        <div className="row">
-          <div className="col-3">
-            <Sidebar
-              currentGenre={currentGenre}
-              handleGenreChange={this.handleGenreChange}
-            />
-          </div>
-          <div className="col-9">
-            <h1>There are {this.numberMovies()} movies in Database </h1>
-            <MoviesTable
-              movies={movies}
-              sortColumn={sortColumn}
-              onSort={this.handleSort}
-              onDelete={function(movies) {
-                onDelete(movies);
-              }}
-              onLike={function(movies) {
-                onLike(movies);
-              }}
-            />
-            <Pagination
-              itemsCount={filtered.length}
-              pageSize={pageSize}
-              currentPage={currentPage}
-              onPageChange={this.handlePageChange}
-            />
-          </div>
+      <div className="row">
+        <div className="col-3">
+          <Sidebar
+            currentGenre={currentGenre}
+            handleGenreChange={this.handleGenreChange}
+          />
         </div>
-      </main>
+        <div className="col-9">
+          <h1>There are {this.numberMovies()} movies in Database </h1>
+          <MoviesTable
+            movies={movies}
+            sortColumn={sortColumn}
+            onSort={this.handleSort}
+            onDelete={function(movies) {
+              onDelete(movies);
+            }}
+            onLike={function(movies) {
+              onLike(movies);
+            }}
+          />
+          <Pagination
+            itemsCount={filtered.length}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChange={this.handlePageChange}
+          />
+        </div>
+      </div>
     );
   }
 }
