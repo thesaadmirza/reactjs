@@ -41,6 +41,11 @@ class VidlyNavbar extends Component {
                 Login
               </NavLink>
             </li>
+            <li class="nav-item">
+              <NavLink class="nav-link" to="./register">
+                Register
+              </NavLink>
+            </li>
           </ul>
         </div>
       </nav>
