@@ -43,7 +43,6 @@ class Movies extends Component {
     this.setState({ sortColumn });
   };
   render() {
-    console.log(this.state.movies);
     const { length: count } = this.state.movies;
     const onLike = this.handleLike;
     const onDelete = this.deletMovie;

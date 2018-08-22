@@ -9,6 +9,7 @@ import MovieDetail from "./moviedetail";
 import LoginForm from "./loginForm";
 import RegisterForm from "./registerForm";
 import AddMovie from "./addMovie";
+import EditMovie from "./EditMovie";
 class Main extends Component {
   render() {
     return (
@@ -23,6 +24,7 @@ class Main extends Component {
           <Route path="/addmovie" component={AddMovie} />
           <Route path="/login" component={LoginForm} />
           <Route path="/register" component={RegisterForm} />
+          <Route path="/EditMovie/:id" component={EditMovie} />
           <Route path="/moviedetail/:id" component={MovieDetail} />
           <Redirect from="/" to="/movies" />
           <Redirect to="/notfound" />

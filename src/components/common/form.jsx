@@ -1,16 +1,21 @@
 import React, { Component } from "react";
 import Input from "./input";
 import Select from "./select";
+import { getMovie } from "../../services/fakeMovieService";
 import Joi from "joi-browser";
 class Form extends Component {
   state = {
-    data: {},
+    data: this.props.match.params.id
+      ? getMovie(this.props.match.params.id)
+      : "",
     errors: {}
   };
+
   validate = () => {
     const result = Joi.validate(this.state.data, this.schema, {
       abortEarly: false
     });
+
     const errors = {};
     if (!result.error) return null;
     result.error.details.forEach(test => {
@@ -18,10 +23,13 @@ class Form extends Component {
     });
     return errors;
   };
+
   handlesubmit = e => {
     e.preventDefault();
     const errors = this.validate();
+
     this.setState({ errors: errors || {} });
+
     if (errors) return;
     this.doSubmit();
   };
@@ -76,6 +84,7 @@ class Form extends Component {
         name={name}
         label={label}
         options={options}
+        selected={this.state.data[name]}
         errors={this.state.errors[name]}
         onChange={this.handleChange}
       />

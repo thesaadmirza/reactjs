@@ -7,7 +7,7 @@ const Tbodyform = props => {
   return movies.map(movies => (
     <tr key={movies._id}>
       <td>
-        <Link to={"./moviedetail/" + movies._id}>{movies.title}</Link>
+        <Link to={"./EditMovie/" + movies._id}>{movies.title}</Link>
       </td>
       <td>{movies.genre.name}</td>
       <td>{movies.numberInStock}</td>
