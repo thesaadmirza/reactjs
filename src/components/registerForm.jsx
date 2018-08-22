@@ -9,6 +9,7 @@ class RegisterForm extends Form {
       .label("Username"),
     password: Joi.string()
       .required()
+      .min(5)
       .label("Password"),
     name: Joi.string().required()
   };

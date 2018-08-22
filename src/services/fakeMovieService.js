@@ -1,5 +1,5 @@
 import * as genresAPI from "./fakeGenreService";
-
+import randomstring from "random-string";
 const movies = [
   {
     _id: "5b21ca3eeb7f6fbccd471815",
@@ -77,13 +77,19 @@ export function getMovie(id) {
 
 export function saveMovie(movie) {
   let movieInDb = movies.find(m => m._id === movie._id) || {};
-  movieInDb.name = movie.name;
+  movieInDb.title = movie.name;
   movieInDb.genre = genresAPI.genres.find(g => g._id === movie.genreId);
   movieInDb.numberInStock = movie.numberInStock;
   movieInDb.dailyRentalRate = movie.dailyRentalRate;
 
   if (!movieInDb._id) {
-    movieInDb._id = Date.now();
+    movieInDb._id = randomstring({
+      length: 15,
+      numeric: true,
+      letters: true,
+      special: false,
+      exclude: ["a", "b", "1"]
+    });
     movies.push(movieInDb);
   }
 

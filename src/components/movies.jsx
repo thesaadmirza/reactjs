@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import {
   getMovies,
   deleteMovie,
@@ -42,6 +43,7 @@ class Movies extends Component {
     this.setState({ sortColumn });
   };
   render() {
+    console.log(this.state.movies);
     const { length: count } = this.state.movies;
     const onLike = this.handleLike;
     const onDelete = this.deletMovie;
@@ -67,6 +69,9 @@ class Movies extends Component {
           />
         </div>
         <div className="col-9">
+          <Link to="/addMovie" className="btn btn-primary">
+            Add Movie
+          </Link>
           <h1>There are {this.numberMovies()} movies in Database </h1>
           <MoviesTable
             movies={movies}
